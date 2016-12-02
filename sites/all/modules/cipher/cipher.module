@@ -1,0 +1,60 @@
+<?php
+
+function cipher_menu() {
+    $items['cipher'] = array(
+        'title' => 'Cipher',
+        'page callback' => 'drupal_get_form',
+        'page arguments' => array('cipher_form'),
+        'access callback' => TRUE,
+        'type' => MENU_NORMAL_ITEM,
+    );
+    $items['cipher_success_page'] = array(
+        'title' => 'Encrpytion Successful',
+        'page callback' => 'cipher_success',
+        'access callback' => TRUE,
+        'type' => MENU_CALLBACK,
+    );
+    return $items;
+}
+
+function cipher_form() {
+    $form['phrase'] = array(
+        '#title' => 'phrase',
+        '#type' => 'textfield',
+        '#description' => t('Please enter the phrase you want to encrypt.'),
+    );
+    $form['direction'] = array(
+        '#title' => 'direction',
+        '#type' => 'textfield',
+        '#description' => t('Left or right?.'),
+    );
+
+    $form['shift_value'] = array(
+        '#title' => 'shift value',
+        '#type' => 'textfield',
+        '#description' => t('encoding value?.'),
+    );
+
+    $form['submit'] = array(
+        '#type' => 'submit',
+        '#value' => 'encode your phrase',
+    );
+    return $form;
+}
+
+function cipher_form_submit($form, &$form_state) {
+    $phrase = $form_state['values']['phrase'];
+    $direction = $form_state['values']['direction'];
+    $shift_value = $form_state['values']['shift_value'];
+
+    $result = 'now all we need is the logic';
+
+    $_SESSION['encoded_phrase'] = $result;
+    $form_state['redirect'] = 'cipher_success_page';
+
+}
+
+function cipher_success() {
+    $final = $_SESSION['encoded_phrase'];
+    return $final;
+}
