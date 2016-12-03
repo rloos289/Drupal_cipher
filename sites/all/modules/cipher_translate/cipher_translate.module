@@ -1,35 +1,35 @@
 <?php
 
-function cipher_menu() {
-    $items['cipher'] = array(
-        'title' => 'Cipher',
+function cipher_translate_menu() {
+    $items['cipher_translate'] = array(
+        'title' => 'Cipher Translate',
         'page callback' => 'drupal_get_form',
-        'page arguments' => array('cipher_form'),
+        'page arguments' => array('cipher_translate_form'),
         'access callback' => TRUE,
         'type' => MENU_NORMAL_ITEM,
     );
-    $items['cipher_success_page'] = array(
-        'title' => 'Encrpytion Successful',
-        'page callback' => 'cipher_success',
+    $items['cipher_translate_success_page'] = array(
+        'title' => 'Decode Successful',
+        'page callback' => 'cipher_translate_success',
         'access callback' => TRUE,
         'type' => MENU_CALLBACK,
     );
     return $items;
 }
 
-function cipher_form() {
+function cipher_translate_form() {
     $form['phrase'] = array(
         '#title' => 'phrase',
         '#type' => 'textfield',
-        '#description' => t('Please enter the phrase you want to encrypt.'),
-        '#element_validate' => array('element_validate_characters'),
+        '#description' => t('Please enter the phrase you want to decrypt.'),
+        '#element_validate' => array('element_validate_translate_characters'),
         '#required' => TRUE,
     );
     $form['direction'] = array(
         '#title' => 'direction',
         '#type' => 'textfield',
         '#description' => t('Left or right?'),
-        '#element_validate' => array('element_validate_direction'),
+        '#element_validate' => array('element_validate_translate_direction'),
         '#required' => TRUE,
     );
 
@@ -43,18 +43,18 @@ function cipher_form() {
 
     $form['submit'] = array(
         '#type' => 'submit',
-        '#value' => 'encode your phrase',
+        '#value' => 'decode your phrase',
     );
     return $form;
 }
 
-function element_validate_characters($element) {
+function element_validate_translate_characters($element) {
     if (preg_match("/[^a-zA-Z0-9\/_.;,!?'|+ -]/", $element['#value'])) {
         form_error($element, t('Please do not use any special characters that are not punctuation'));
     }
 }
 
-function element_validate_direction($element) {
+function element_validate_translate_direction($element) {
     $direction_check = trim(strtolower($element['#value']));
 
     if ($direction_check == 'right' || $direction_check == 'left') {
@@ -64,7 +64,7 @@ function element_validate_direction($element) {
     }
 }
 
-function change_letter($letter, $direction, $shift_value, $dictionary) {
+function change_letter_back($letter, $direction, $shift_value, $dictionary) {
 
     //code is redundant here but helps with readability
     if ($direction == "right") {
@@ -86,9 +86,15 @@ function change_letter($letter, $direction, $shift_value, $dictionary) {
     return $new_letter;
 }
 
-function cipher_form_submit($form, &$form_state) {
+function cipher_translate_form_submit($form, &$form_state) {
     $phrase = $form_state['values']['phrase'];
-    $direction = $form_state['values']['direction'];
+
+    if ($form_state['values']['direction'] == 'left') {
+        $direction = 'right';
+    } elseif ($form_state['values']['direction'] == 'right') {
+        $direction = 'left';
+    };
+
     $shift_value = $form_state['values']['shift_value'];
     $dictionary = array('a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z');
 
@@ -107,10 +113,10 @@ function cipher_form_submit($form, &$form_state) {
     $result = join($result);
 
     $_SESSION['encoded_phrase'] = $result;
-    $form_state['redirect'] = 'cipher_success_page';
+    $form_state['redirect'] = 'cipher_translate_success_page';
 }
 
-function cipher_success() {
+function cipher_translate_success() {
     $final = $_SESSION['encoded_phrase'];
     return $final;
 }
