@@ -1,5 +1,0 @@
-name = Cipher Translate
-description = decode your sentences
-package = custom modules
-core = 7.x
-files[] = cipher_translate.module
