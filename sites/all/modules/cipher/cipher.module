@@ -6,7 +6,7 @@ function cipher_menu() {
         'page callback' => 'drupal_get_form',
         'page arguments' => array('cipher_form'),
         'access callback' => TRUE,
-        'type' => MENU_NORMAL_ITEM,
+        'type' => MENU_CALLBACK,
     );
     $items['cipher_success_page'] = array(
         'title' => 'Success!',
@@ -93,16 +93,13 @@ function change_letter($letter, $direction, $shift_value, $dictionary) {
     return $new_letter;
 }
 
-function cipher_form_submit($form, &$form_state) {
-    $phrase = $form_state['values']['phrase'];
-    $direction = $form_state['values']['direction'];
-    $shift_value = $form_state['values']['shift_value'];
+function translate_phrase($phrase, $direction, $shift_value) {
     $dictionary = array('a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z');
 
     $phrase = str_split(strtolower($phrase));
     $result = array();
 
-    for ($i = 0; $i <= count($phrase) ; $i++) {
+    for ($i = 0; $i <= count($phrase) - 1 ; $i++) {
         if ((in_array($phrase[$i], $dictionary))) { //code works but results in offset error here for some reason
             $new_letter = change_letter($phrase[$i], $direction, $shift_value, $dictionary);
             array_push($result, $new_letter);
@@ -111,39 +108,27 @@ function cipher_form_submit($form, &$form_state) {
         }
     }
 
-    $result = join($result);
+    return join($result);
+}
 
-    $_SESSION['encoded_phrase'] = $result;
+function cipher_form_submit($form, &$form_state) {
+    $phrase = $form_state['values']['phrase'];
+    $direction = $form_state['values']['direction'];
+    $shift_value = $form_state['values']['shift_value'];
+    $_SESSION['encoded_phrase'] = translate_phrase($phrase, $direction, $shift_value);
     $form_state['redirect'] = 'cipher_success_page';
 }
 
 function decode_form_submit($form, &$form_state) {
     $phrase = $form_state['values']['phrase'];
-
     if ($form_state['values']['direction'] == 'left') {
         $direction = 'right';
     } elseif ($form_state['values']['direction'] == 'right') {
         $direction = 'left';
     };
-
     $shift_value = $form_state['values']['shift_value'];
-    $dictionary = array('a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z');
 
-    $phrase = str_split(strtolower($phrase));
-    $result = array();
-
-    for ($i = 0; $i <= count($phrase) ; $i++) {
-        if ((in_array($phrase[$i], $dictionary))) { //code works but results in offset error here for some reason
-            $new_letter = change_letter($phrase[$i], $direction, $shift_value, $dictionary);
-            array_push($result, $new_letter);
-        } else {
-            array_push($result, $phrase[$i]); //code works but results in offset error here for some reason
-        }
-    }
-
-    $result = join($result);
-
-    $_SESSION['encoded_phrase'] = $result;
+    $_SESSION['encoded_phrase'] = translate_phrase($phrase, $direction, $shift_value);
     $form_state['redirect'] = 'cipher_success_page';
     }
 
