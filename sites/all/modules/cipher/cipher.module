@@ -100,11 +100,11 @@ function translate_phrase($phrase, $direction, $shift_value) {
     $result = array();
 
     for ($i = 0; $i <= count($phrase) - 1 ; $i++) {
-        if ((in_array($phrase[$i], $dictionary))) { //code works but results in offset error here for some reason
+        if ((in_array($phrase[$i], $dictionary))) {
             $new_letter = change_letter($phrase[$i], $direction, $shift_value, $dictionary);
             array_push($result, $new_letter);
         } else {
-            array_push($result, $phrase[$i]); //code works but results in offset error here for some reason
+            array_push($result, $phrase[$i]); 
         }
     }
 
