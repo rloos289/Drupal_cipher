@@ -4,7 +4,7 @@ function cipher_menu() {
     $items['cipher'] = array(
         'title' => 'Cipher',
         'page callback' => 'drupal_get_form',
-        'page arguments' => array('cipher_form'),
+        'page arguments' => array('cipher_form', 'random_button'),
         'access callback' => TRUE,
         'type' => MENU_CALLBACK,
     );
@@ -104,7 +104,7 @@ function translate_phrase($phrase, $direction, $shift_value) {
             $new_letter = change_letter($phrase[$i], $direction, $shift_value, $dictionary);
             array_push($result, $new_letter);
         } else {
-            array_push($result, $phrase[$i]); 
+            array_push($result, $phrase[$i]);
         }
     }
 
@@ -129,10 +129,11 @@ function decode_form_submit($form, &$form_state) {
     $shift_value = $form_state['values']['shift_value'];
 
     $_SESSION['encoded_phrase'] = translate_phrase($phrase, $direction, $shift_value);
+
     $form_state['redirect'] = 'cipher_success_page';
     }
 
 function cipher_success() {
     $final = $_SESSION['encoded_phrase'];
-    return $final;
+    return 'Your encoded phrase is ' . '<pre>' . $final . '</pre>';
 }
