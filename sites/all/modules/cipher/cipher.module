@@ -135,5 +135,5 @@ function decode_form_submit($form, &$form_state) {
 
 function cipher_success() {
     $final = $_SESSION['encoded_phrase'];
-    return 'Your encoded phrase is ' . '<pre>' . $final . '</pre>';
+    return '<div class="result"> Your encoded phrase is ' . '<pre>' . $final . '</pre></div>';
 }

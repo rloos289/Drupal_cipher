@@ -1,9 +1,47 @@
 body {
     background-image: url(../images-source/matrix.png);
     color: white;
+    font-family: 'Press Start 2P', cursive;
 }
 
 #cipher-form {
     background-color: grey;
-    text-align: center; 
+    text-align: center;
+}
+
+.result {
+    background-color: grey;
+    text-align: center;
+}
+
+.header__logo-image {
+    display: none;
+}
+
+.header__logo {
+    color: white;
+}
+
+.active {
+    display: none;
+}
+
+a:link {
+    color: white;
+}
+
+a:visited {
+    color: white;
+}
+
+li.breadcrumb__item {
+    display: none;
+}
+
+li.menu-219.first.last {
+    display: none;
+}
+
+div.layout-3col__full h1 {
+    display: none;
 }
